@@ -1,5 +1,6 @@
 from django.db import models
 from netbox.models import NetBoxModel
+from netbox.extra.modeles import EventRuleMixin
 from dcim.models import Manufacturer, Device
 from virtualization.models import VirtualMachine
 from django.utils.timezone import now
@@ -21,7 +22,7 @@ from .choices import (
 
 # ---------- LicenseType ----------
 
-class LicenseType(NetBoxModel):
+class LicenseType(EventRuleMixin, NetBoxModel):
     name = models.CharField(max_length=255)
 
     slug = models.SlugField(unique=True)
@@ -121,7 +122,7 @@ class LicenseType(NetBoxModel):
 
 # ---------- License ----------
 
-class License(NetBoxModel):
+class License(EventRuleMixin, NetBoxModel):
     license_key = models.CharField(max_length=255, unique=True)
     serial_number = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -293,7 +294,7 @@ class License(NetBoxModel):
 
 # ---------- Assignments ----------
 
-class LicenseAssignment(NetBoxModel):
+class LicenseAssignment(EventRuleMixin, NetBoxModel):
 
     license = models.ForeignKey(
         "License", on_delete=models.CASCADE, related_name="assignments",

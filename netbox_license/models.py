@@ -117,6 +117,8 @@ class LicenseType(NetBoxModel, EventRulesMixin):
 
 
     class Meta:
+        app_label = "netbox_license"
+        abstract = False
         verbose_name = "License Type"
         verbose_name_plural = "License Types"
 
@@ -289,6 +291,8 @@ class License(NetBoxModel, EventRulesMixin):
             return 100
     
     class Meta:
+        app_label = "netbox_license"
+        abstract = False
         verbose_name = "Licenses"
         verbose_name_plural = "Licenses"
 
@@ -395,6 +399,8 @@ class LicenseAssignment(NetBoxModel, EventRulesMixin):
         return reverse("plugins:netbox_license:licenseassignment", args=[self.pk])
 
     class Meta:
+        app_label = "netbox_license"
+        abstract = False
         verbose_name = "License Assignments"
         verbose_name_plural = "License Assignments"
         constraints = [

@@ -3,6 +3,7 @@ from django.urls import include, path
 from .version import __version__
 from .template_content import template_extensions
 
+
 class LicenseManagementConfig(PluginConfig):
     name = 'netbox_license'
     verbose_name = 'NetBox License '
@@ -18,6 +19,7 @@ class LicenseManagementConfig(PluginConfig):
         'used_additional_status_names': list(),
         'asset_warranty_expire_warning_days': 90,
     }
+    event_rule_models = ("netbox_license.LicenseType", "netbox_license.License", "netbox_license.LicenseAssignment")
 
     def ready(self):
         self.urlpatterns = [

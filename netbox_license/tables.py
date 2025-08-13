@@ -66,10 +66,10 @@ class LicenseTable(NetBoxTable):
     )
     license_key = tables.Column(linkify=True)
 
-    product_key = tables.Column(
+    product_code = tables.Column(
         accessor="license_type.product_code",
         order_by="license_type__product_code",
-        verbose_name="Product Key"
+        verbose_name="Product Code"
     )
 
     serial_number = tables.Column(
@@ -156,7 +156,7 @@ class LicenseTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = License
         fields = (
-            "license_type", "license_model", "license_key", "product_key", "serial_number",
+            "license_type", "license_model", "license_key", "product_code", "serial_number",
             "manufacturer", "parent_license", "parent_license_type",
             "is_parent_license", "is_child_license", "description",
             "assigned_count", "volume_type", "volume_relation",

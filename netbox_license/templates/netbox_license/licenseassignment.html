@@ -28,16 +28,16 @@
           <td class="font-monospace">{{ object.license|linkify }}</td>
         </tr>
         <tr>
-          <th scope="row">Product Key</th>
-          <td class="font-monospace">{{ object.license.product_key|placeholder }}</td>
+          <th scope="row">Product Code</th>
+          <td>{{ object.license.license_type.product_code|linkify|placeholder }}</td>
         </tr>
         <tr>
           <th scope="row">Serial Number</th>
-          <td>{{ object.license.serial_number|placeholder }}</td>
+          <td class="font-monospace">{{ object.license.serial_number|placeholder }}</td>
         </tr>
         <tr>
           <th scope="row">License Manufacturer</th>
-          <td>{{ object.license.license_type.manufacturer|linkify|placeholder }}</td>  <!-- ✅ -->
+          <td>{{ object.license.license_type.manufacturer|linkify|placeholder }}</td>
         </tr>
         <tr>
           <th scope="row">Volume Type</th>

@@ -188,5 +188,6 @@ class License(NetBoxModel):
     
     
     class Meta:
+        ordering = ['id']
         verbose_name = "Licenses"
         verbose_name_plural = "Licenses"

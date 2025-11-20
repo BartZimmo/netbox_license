@@ -102,5 +102,6 @@ class LicenseType(NetBoxModel):
         return reverse("plugins:netbox_license:licensetype", args=[self.pk])
     
     class Meta:
+        ordering = ['id']
         verbose_name = "License Type"
         verbose_name_plural = "License Types"

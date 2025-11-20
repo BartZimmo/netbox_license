@@ -7,23 +7,26 @@ from extras.events import enqueue_event
 
 from netbox_license.models import License
 
+logger = logging.getLogger('netbox_license')
+
 ### This Signal is needed to trigger the Custom Event type.
 ### -> The Event type will be triggerd every time the Status field is updated from a License
 
-logger = logging.getLogger('netbox_license')
-
 @receiver(pre_save, sender=License)
 def track_status_change(sender, instance, **kwargs):
-    logger.info("Signal triggered for license object")
+    logger.debug("track_status_change signal loaded and triggered")
+    logger.info("Signal triggered for License object")
 
+    # Skip new objects (no previous state)
     if not instance.pk:
-        return  # Skip new objects
+        return
 
     try:
         old_instance = License.objects.get(pk=instance.pk)
     except License.DoesNotExist:
         return
 
+    # Check if status changed
     if old_instance.status != instance.status:
         logger.info(f"Status changed: {old_instance.status} -> {instance.status}")
 
@@ -33,6 +36,10 @@ def track_status_change(sender, instance, **kwargs):
             return
 
         queue = events_queue.get()
-        enqueue_event(queue, instance, request.user, request.id, 'netbox_license.expirystatus')
+        try:
+            enqueue_event(queue, instance, request, 'netbox_license.expirystatus')
+            logger.info("Event enqueued: netbox_license.expirystatus")
+        except Exception as e:
+            logger.error(f"Failed to enqueue event: {e}")
+
         events_queue.set(queue)
-        logger.info("Event enqueued: netbox_license.expirystatus")

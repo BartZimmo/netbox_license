@@ -28,21 +28,21 @@
           <td>{{ object.license_type|linkify }}</td>
         </tr>
         <tr>
-          <th>License Key</th>
-          <td class="font-monospace">{{ object|linkify }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Product Key</th>
-          <td class="font-monospace">{{ object.product_key|placeholder }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Serial Number</th>
-          <td>{{ object.serial_number|placeholder }}</td>
+         <th scope="row">Product Code</th>
+         <td class="font-monospace">{{ object.license_type.product_code|linkify|placeholder }}</td>
         </tr>
         <tr>
           <th scope="row">License Manufacturer</th>
-          <td>{{ object.license_type.manufacturer|linkify|placeholder }}</td>  <!-- ✅ -->
-        </tr>        
+          <td>{{ object.license_type.manufacturer|linkify|placeholder }}</td>
+        </tr> 
+        <tr>
+          <th>License Key</th>
+          <td class="font-monospace">{{ object }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Serial Number</th>
+          <td class="font-monospace">{{ object.serial_number|placeholder }}</td>
+        </tr>      
         <tr>
           <th scope="row">Volume Type</th>
           <td>{{ object.license_type.get_volume_type_display }}</td>
@@ -120,7 +120,7 @@
           {% for assignment in object.assignments.all %}
           <tr>
             <td>{{ assignment.device|linkify|placeholder }}</td>
-            <td>{{ assignment.device_manufacturer|linkify|placeholder }}</td>
+            <td>{{ assignment.device.device_type.manufacturer|linkify|placeholder }}</td>
             <td>{{ assignment.assigned_on|date:"Y-m-d" }}</td>
             <td>{{ assignment.volume }}</td>
           </tr>

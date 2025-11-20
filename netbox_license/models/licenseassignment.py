@@ -97,6 +97,7 @@ class LicenseAssignment(NetBoxModel):
         return reverse("plugins:netbox_license:licenseassignment", args=[self.pk])
 
     class Meta:
+        ordering = ['id']
         verbose_name = "License Assignments"
         verbose_name_plural = "License Assignments"
         constraints = [

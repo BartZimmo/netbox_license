@@ -9,9 +9,9 @@ class NetboxLicenseConfig(PluginConfig):
     version = __version__
     description = 'License management Plugin for NetBox'
     base_url = 'license'
-    author = 'Kobe Naessens'
-    author_email = 'kobe.naessens@zabun.be'
-    min_version = '4.3.0'
+    author = 'Bart Van der Biest'
+    author_email = 'bart@zimmo.be'
+    min_version = '4.4.0'
     default_settings = {
         'top_level_menu': True,
     }

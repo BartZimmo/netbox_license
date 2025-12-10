@@ -26,9 +26,9 @@ def track_status_change(sender, instance, **kwargs):
     except License.DoesNotExist:
         return
 
-    # Check if status changed
-    if old_instance.status != instance.status:
-        logger.info(f"Status changed: {old_instance.status} -> {instance.status}")
+    # Check if support_status changed
+    if old_instance.support_status != instance.support_status:
+        logger.info(f"Support status changed: {old_instance.support_status} -> {instance.support_status}")
 
         request = current_request.get()
         if request is None:

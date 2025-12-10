@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import date
 from django.utils import timezone
+from django.conf import settings
 from netbox_license.models.licensetype import LicenseType
 from taggit.managers import TaggableManager
 from ..choices import AssignmentKindChoices
@@ -33,7 +34,9 @@ class License(NetBoxModel):
         related_name="sub_licenses",
         help_text="Link to parent license for extensions."
     )
-    status = models.CharField(max_length=20, default="unknown")
+    status = models.CharField(max_length=20, default="active")
+
+    support_status = models.CharField(max_length=20, default="unknown")
 
     tags = TaggableManager(related_name="lm_license_tags")
 
@@ -70,7 +73,7 @@ class License(NetBoxModel):
             if self.expiry_date < self.purchase_date:
                 raise ValidationError(_("Expiry date cannot be earlier than purchase date."))
             
-        self.status = self.compute_status()
+        self.support_status = self.compute_support_status()
 
     def current_usage(self):
         assigned = self.assignments.aggregate(models.Sum('volume'))['volume__sum'] or 0
@@ -82,16 +85,41 @@ class License(NetBoxModel):
             return f"{self.current_usage()}/∞"
         return f"{self.current_usage()}/{self.volume_limit}"
     
-    def compute_status(self) -> str:
+
+    ### Old code for support status, kept for reference
+
+    # ## Calculate support status based on expiry date. This field is updated on save during create and update.
+    # def compute_support_status(self) -> str:
+    #     if not self.expiry_date:
+    #         return "unknown"
+
+    #     delta = (self.expiry_date - timezone.now().date()).days
+    #     if delta < 0:
+    #         return "expired"
+    #     elif delta < 30:
+    #         return "critical"
+    #     elif delta < 90:
+    #         return "warning"
+    #     return "good"
+
+
+
+     ## Calculate support status based on expiry date. This field is updated on save during create and update.
+    def compute_support_status(self) -> str:
         if not self.expiry_date:
             return "unknown"
+
+        # Get configuration values with defaults
+        plugin_config = getattr(settings, 'PLUGINS_CONFIG', {}).get('netbox_license', {})
+        critical_days = plugin_config.get('SUPPORT_STATUS_CRITICAL_DAYS', 30)
+        warning_days = plugin_config.get('SUPPORT_STATUS_WARNING_DAYS', 90)
 
         delta = (self.expiry_date - timezone.now().date()).days
         if delta < 0:
             return "expired"
-        elif delta < 30:
+        elif delta < critical_days:
             return "critical"
-        elif delta < 90:
+        elif delta < warning_days:
             return "warning"
         return "good"
         

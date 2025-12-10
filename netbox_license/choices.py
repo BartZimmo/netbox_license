@@ -19,11 +19,11 @@ class VolumeTypeChoices(ChoiceSet):
 class PurchaseModelChoices(ChoiceSet):
     key = 'LicenseType.purchase_model'
 
-    PERIPHERAL = 'peripheral'
+    PERPETUAL = 'perpetual'
     SUBSCRIPTION = 'subscription'
 
     CHOICES = [
-        (PERIPHERAL, _('Peripheral')),
+        (PERPETUAL, _('Perpetual')),
         (SUBSCRIPTION, _('Subscription')),
     ]
 
@@ -63,28 +63,29 @@ class LicenseStatusChoices(ChoiceSet):
 
     ACTIVE = 'active'
     INACTIVE = 'inactive'
-    EXPIRED = 'expired'
 
     CHOICES = [
         (ACTIVE, _('Active'), 'green'),
         (INACTIVE, _('Inactive'), 'gray'),
+    ]
+
+class LicenseSupportStatusChoices(ChoiceSet):
+    key = 'License.support_status'
+
+    GOOD = 'good'
+    WARNING = 'warning'
+    CRITICAL = 'critical'
+    EXPIRED = 'expired'
+
+    CHOICES = [
+        (GOOD, _('Good'), 'green'),
+        (WARNING, _('Warning'), 'yellow'),
+        (CRITICAL, _('Critical'), 'orange'),
         (EXPIRED, _('Expired'), 'red'),
     ]
+
 
 # ---------- LicenseAssignment ----------
-
-class LicenseAssignmentStatusChoices(ChoiceSet):
-    key = 'LicenseAssignment.status'
-
-    ACTIVE = 'active'
-    INACTIVE = 'inactive'
-    EXPIRED = 'expired'
-
-    CHOICES = [
-        (ACTIVE, _('Active'), 'green'),
-        (INACTIVE, _('Inactive'), 'gray'),
-        (EXPIRED, _('Expired'), 'red'),
-    ]
 
 class AssignmentKindChoices(ChoiceSet):
     DEVICE = 'device'

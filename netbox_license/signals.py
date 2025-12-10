@@ -37,8 +37,8 @@ def track_status_change(sender, instance, **kwargs):
 
         queue = events_queue.get()
         try:
-            enqueue_event(queue, instance, request, 'netbox_license.expirystatus')
-            logger.info("Event enqueued: netbox_license.expirystatus")
+            enqueue_event(queue, instance, request, 'netbox_license.supportstatus')
+            logger.info("Event enqueued: netbox_license.supportstatus")
         except Exception as e:
             logger.error(f"Failed to enqueue event: {e}")
 

@@ -16,7 +16,7 @@ from ..choices import (
     LicenseModelChoices,
     VolumeRelationChoices,
     LicenseStatusChoices,
-    LicenseAssignmentStatusChoices,
+    LicenseSupportStatusChoices,
     AssignmentKindChoices
 
 )
@@ -167,6 +167,12 @@ class LicenseForm(NetBoxModelForm):
         label="Expiry Date"
     )
 
+    status = forms.ChoiceField(
+        choices=LicenseStatusChoices,
+        required=True,
+        label="Status",
+    )
+
     comment = CommentField()
 
     class Meta:
@@ -174,7 +180,7 @@ class LicenseForm(NetBoxModelForm):
         fields = [
             "license_type", "license_key", "serial_number",
             "description", "volume_limit", "parent_license",
-            "purchase_date", "expiry_date", "comment"
+            "purchase_date", "expiry_date", "status", "comment"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -250,6 +256,9 @@ class LicenseAssignmentForm(NetBoxModelForm):
         required=True,
         label="License",
         selector=True,
+        query_params={
+            "status": "active",
+        }
     )
 
     device = DynamicModelChoiceField(

@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 from django.db.models import Q
 from netbox_license.models.license import License
 from netbox_license.models.licensetype import LicenseType
-from netbox_license.choices import VolumeTypeChoices, LicenseModelChoices
+from netbox_license.choices import VolumeTypeChoices, LicenseModelChoices, LicenseSupportStatusChoices, LicenseStatusChoices
 from netbox.filtersets import NetBoxModelFilterSet
 from dcim.models import Manufacturer, Device
 from virtualization.models import VirtualMachine, Cluster
@@ -48,6 +48,17 @@ class LicenseFilterSet(NetBoxModelFilterSet):
         lookup_expr='icontains',
         label="Serial Number"
     )
+
+    status = django_filters.MultipleChoiceFilter(
+        choices=LicenseStatusChoices,
+        label="Status"
+    )
+
+    support_status = django_filters.MultipleChoiceFilter(
+        choices=LicenseSupportStatusChoices,
+        label="Support Status"
+    )
+
 
     parent_license = django_filters.ModelChoiceFilter(
         queryset=License.objects.filter(parent_license__isnull=True),
@@ -107,7 +118,7 @@ class LicenseFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = License
         fields = [
-            "license_key", "serial_number","license_type__manufacturer", "license_type_id",
+            "license_key", "serial_number","license_type__manufacturer", "license_type_id", "status", "support_status",
             "volume_type", "license_model", "parent_license", "parent_license_type",
             "child_license", "is_parent_license", "is_child_license",
             "purchase_date", "expiry_date", "is_assigned",

@@ -10,8 +10,7 @@ from ..choices import (
     PurchaseModelChoices,
     LicenseModelChoices,
     VolumeRelationChoices,
-    LicenseStatusChoices,
-    LicenseAssignmentStatusChoices
+    LicenseStatusChoices
 )
 from netbox.forms import NetBoxModelBulkEditForm
 from utilities.forms.fields import DynamicModelChoiceField, CommentField
@@ -138,12 +137,18 @@ class LicenseBulkEditForm(NetBoxModelBulkEditForm):
         label="Description"
     )
 
+    status = forms.ChoiceField(
+        choices=[('', '---------')] + list(LicenseStatusChoices),
+        required=False,
+        label="Status"
+    )
+
     comment = CommentField()
 
     class Meta:
         fields = [
             "license_type", "description", "volume_limit",
-            "parent_license", "purchase_date", "expiry_date", "comment"
+            "parent_license", "purchase_date", "expiry_date", "status", "comment"
         ]
 # ---------- Assignments ----------
 

@@ -1,6 +1,7 @@
 from django import forms
 from netbox.forms import NetBoxModelFilterSetForm
-from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, CommentField
+from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, CommentField, DynamicChoiceField
+from netbox.api.fields import ChoiceField
 from utilities.forms.rendering import FieldSet
 from dcim.models import Manufacturer, Device, DeviceType
 from virtualization.models import VirtualMachine, Cluster
@@ -15,7 +16,7 @@ from ..choices import (
     LicenseModelChoices,
     VolumeRelationChoices,
     LicenseStatusChoices,
-    LicenseAssignmentStatusChoices,
+    LicenseSupportStatusChoices,
     AssignmentKindChoices,
 )
 
@@ -92,7 +93,7 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
     )
     fieldsets = (
         FieldSet('q', name='Search'),
-        FieldSet('license_type__manufacturer_id', 'license_key', 'serial_number', 'name', name='License Info'),
+        FieldSet('license_type__manufacturer_id', 'license_key', 'serial_number', 'name', 'status', 'support_status', name='License Info'),
         FieldSet('license_model', 'volume_type', 'license_type_id', name='License Type Info'),
         FieldSet('is_parent_license', 'is_child_license', 'parent_license', 'child_license', 'parent_license_type', name='License Relationship'),
         FieldSet('assignments__device_id', 'assignments__virtual_machine_id', 'assignments__virtual_machine__cluster_id', 'is_assigned', name='Assignment Info'),
@@ -110,6 +111,16 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
     license_key = forms.CharField(required=False, label="License Key")
     serial_number = forms.CharField(required=False, label="Serial Number")
     name = forms.CharField(required=False, label="Name")
+    status = forms.ChoiceField(
+        required=False,
+        label="Status",
+        choices=[('', '---------')] + list(LicenseStatusChoices)
+    )
+    support_status = forms.ChoiceField(
+        required=False,
+        label="Support Status",
+        choices=[('', '---------')] + list(LicenseSupportStatusChoices)
+    )
 
     license_model = forms.MultipleChoiceField(
         required=False,

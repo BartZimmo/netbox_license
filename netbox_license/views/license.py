@@ -4,12 +4,12 @@ from django.db.models import OuterRef, Subquery, Sum, Case, When, BooleanField, 
 from django.db.models.functions import Coalesce
 from netbox_license.models.license import License
 from netbox_license.models.licenseassignment import LicenseAssignment
-from .. import tables
 from ..forms.filtersets import LicenseFilterForm
 from ..forms.bulk_edit import LicenseBulkEditForm
 from ..forms.bulk_import import LicenseImportForm
 from ..forms.models import LicenseForm
 from netbox_license.filtersets.licenses import LicenseFilterSet
+from netbox_license.tables.license import LicenseTable
 
 
 
@@ -38,7 +38,7 @@ class LicenseView(generic.ObjectView):
 class LicenseListView(generic.ObjectListView):
     """View for displaying a list of Licenses"""
     queryset = License.objects.all()
-    table = tables.LicenseTable
+    table = LicenseTable
     filterset = LicenseFilterSet
     filterset_form = LicenseFilterForm
 
@@ -108,7 +108,7 @@ class LicenseBulkEditView(generic.BulkEditView):
     """View for bulk editing licenses."""
     queryset = License.objects.all()
     filterset = LicenseFilterSet
-    table = tables.LicenseTable
+    table = LicenseTable
     form = LicenseBulkEditForm
     default_return_url = 'plugins:netbox_license:license_list'
 
@@ -117,4 +117,4 @@ class LicenseBulkEditView(generic.BulkEditView):
 class LicenseBulkDeleteView(generic.BulkDeleteView):
     """View for bulk deleting licenses."""
     queryset = License.objects.all()
-    table = tables.LicenseTable
+    table = LicenseTable

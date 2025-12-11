@@ -258,7 +258,8 @@ class LicenseAssignmentForm(NetBoxModelForm):
         selector=True,
         query_params={
             "status": "active",
-        }
+        },
+        help_text="Only Licenses with active status are shown."
     )
 
     device = DynamicModelChoiceField(

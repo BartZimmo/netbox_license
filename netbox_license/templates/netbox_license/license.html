@@ -68,7 +68,7 @@
           <td>{{ object.parent_license|linkify }}</td>
         </tr>
         {% endif %}
-        
+
         {% if object.purchase_date %}
         <tr>
           <th scope="row">Purchase Date</th>
@@ -110,7 +110,7 @@
   <div class="col-md-6">
     <div class="card">
       <h2 class="card-header d-flex justify-content-between align-items-center">
-        Assigned Devices ({{ object.usage_display }})
+        Assigned Devices
         <div class="card-actions">
           <a href="{% url 'plugins:netbox_license:licenseassignment_add' %}?license={{ object.id }}&manufacturer={{ object.license_type.manufacturer.id }}" class="btn btn-ghost-primary btn-sm">
             <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Assignment
@@ -124,16 +124,66 @@
             <th>Device Manufacturer</th>
             <th>Assigned On</th>
             <th>Volume</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {% for assignment in object.assignments.all %}
+          {% if assignment.device %}
           <tr>
             <td>{{ assignment.device|linkify|placeholder }}</td>
             <td>{{ assignment.device.device_type.manufacturer|linkify|placeholder }}</td>
             <td>{{ assignment.assigned_on|date:"Y-m-d" }}</td>
             <td>{{ assignment.volume }}</td>
+            <td class="text-end noprint">
+              <a href="{% url 'plugins:netbox_license:licenseassignment_edit' pk=assignment.pk %}" class="btn btn-sm btn-warning" title="Edit">
+                <i class="mdi mdi-pencil"></i>
+              </a>
+            </td>
           </tr>
+          {% endif %}
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-muted">No assignments found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="card mt-3">
+      <h2 class="card-header d-flex justify-content-between align-items-center">
+        Assigned Virtual Machines
+        <div class="card-actions">
+          <a href="{% url 'plugins:netbox_license:licenseassignment_add' %}?license={{ object.id }}&manufacturer={{ object.license_type.manufacturer.id }}" class="btn btn-ghost-primary btn-sm">
+            <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Assignment
+          </a>
+        </div>
+      </h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Virtual Machine</th>
+            <th>Assigned On</th>
+            <th>Volume</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for assignment in object.assignments.all %}
+          {% if assignment.virtual_machine %}
+          <tr>
+            <td>{{ assignment.virtual_machine|linkify|placeholder }}</td>
+            <td>{{ assignment.assigned_on|date:"Y-m-d" }}</td>
+            <td>{{ assignment.volume }}</td>
+            <td class="text-end noprint">
+              <a href="{% url 'plugins:netbox_license:licenseassignment_edit' pk=assignment.pk %}" class="btn btn-sm btn-warning" title="Edit">
+                <i class="mdi mdi-pencil"></i>
+              </a>
+            </td>
+          </tr>
+          {% endif %}
           {% empty %}
           <tr>
             <td colspan="4" class="text-muted">No assignments found.</td>

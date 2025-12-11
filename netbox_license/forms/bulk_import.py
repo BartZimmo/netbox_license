@@ -47,7 +47,7 @@ class LicenseTypeImportForm(NetBoxModelImportForm):
     purchase_model = CSVChoiceField(
         choices=PurchaseModelChoices,
         required=True,
-        help_text='Peripheral or subscription.'
+        help_text='Perpetual or subscription.'
     )
     base_license = CSVModelChoiceField(
         queryset=LicenseType.objects.filter(license_model=LicenseModelChoices.BASE),

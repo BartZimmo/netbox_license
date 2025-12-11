@@ -116,7 +116,7 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
         label="Status",
         choices=[('', '---------')] + list(LicenseStatusChoices)
     )
-    support_status = forms.ChoiceField(
+    support_status = forms.MultipleChoiceField(
         required=False,
         label="Support Status",
         choices=[('', '---------')] + list(LicenseSupportStatusChoices)

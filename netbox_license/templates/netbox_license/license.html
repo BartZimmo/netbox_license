@@ -2,6 +2,7 @@
 {% load helpers %}
 {% load humanize %}
 {% load plugins %}
+{% load i18n %}
 
 {% block title %}
   {{ object.license_key }}
@@ -67,6 +68,7 @@
           <td>{{ object.parent_license|linkify }}</td>
         </tr>
         {% endif %}
+        
         {% if object.purchase_date %}
         <tr>
           <th scope="row">Purchase Date</th>
@@ -88,16 +90,16 @@
           </td>
         </tr>
         <tr>
-          <th scope="row">Support Status</th>
-          <td class="font-monospace">{{ object.support_status }}</td>
+          <th scope="row">{% trans "Support Status" %}</th>
+          <td>{% badge object.get_support_status_display bg_color=object.get_support_status_color %}</td>
         </tr>
         <tr>
           <th scope="row">Description</th>
           <td>{{ object.description|placeholder }}</td>
         </tr>
         <tr>
-          <th scope="row">Status</th>
-          <td class="font-monospace">{{ object.status }}</td>
+          <th scope="row">{% trans "Status" %}</th>
+          <td>{% badge object.get_status_display bg_color=object.get_status_color %}</td>
         </tr>
       </table>
     </div>

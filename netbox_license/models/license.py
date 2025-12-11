@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from netbox_license.models.licensetype import LicenseType
 from taggit.managers import TaggableManager
-from ..choices import AssignmentKindChoices
+from ..choices import AssignmentKindChoices, LicenseStatusChoices, LicenseSupportStatusChoices
 
 class License(NetBoxModel):
     license_key = models.CharField(max_length=255, unique=True)
@@ -34,9 +34,17 @@ class License(NetBoxModel):
         related_name="sub_licenses",
         help_text="Link to parent license for extensions."
     )
-    status = models.CharField(max_length=20, default="active")
+    status = models.CharField(
+        max_length=20,
+        choices=LicenseStatusChoices,
+        default=LicenseStatusChoices.ACTIVE
+    )
 
-    support_status = models.CharField(max_length=20, default="unknown")
+    support_status = models.CharField(
+        max_length=20,
+        choices=LicenseSupportStatusChoices,
+        default=LicenseSupportStatusChoices.UNKNOWN
+    )
 
     tags = TaggableManager(related_name="lm_license_tags")
 
@@ -84,6 +92,13 @@ class License(NetBoxModel):
         if vt == "unlimited":
             return f"{self.current_usage()}/∞"
         return f"{self.current_usage()}/{self.volume_limit}"
+
+
+    def get_status_color(self):
+        return LicenseStatusChoices.colors.get(self.status)
+
+    def get_support_status_color(self):
+        return LicenseSupportStatusChoices.colors.get(self.support_status)
     
 
     ### Old code for support status, kept for reference

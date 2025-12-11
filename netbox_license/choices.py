@@ -72,12 +72,14 @@ class LicenseStatusChoices(ChoiceSet):
 class LicenseSupportStatusChoices(ChoiceSet):
     key = 'License.support_status'
 
+    UNKNOWN = 'unknown'
     GOOD = 'good'
     WARNING = 'warning'
     CRITICAL = 'critical'
     EXPIRED = 'expired'
 
     CHOICES = [
+        (UNKNOWN, _('Unknown'), 'gray'),
         (GOOD, _('Good'), 'green'),
         (WARNING, _('Warning'), 'yellow'),
         (CRITICAL, _('Critical'), 'orange'),

@@ -1,6 +1,6 @@
 from django.db.models import Sum
 from django_tables2 import tables, TemplateColumn
-from netbox.tables import NetBoxTable
+from netbox.tables import NetBoxTable, columns
 from django.urls import reverse
 from django.utils.html import format_html
 from ..models import License, LicenseAssignment, LicenseType
@@ -30,10 +30,10 @@ class LicenseTable(NetBoxTable):
     serial_number = tables.Column(
         verbose_name="Serial Number"
     )
-    status = tables.Column(
+    status = columns.ChoiceFieldColumn(
         verbose_name="Status"
     )
-    support_status = tables.Column(
+    support_status = columns.ChoiceFieldColumn(
         verbose_name="Support Status"
     )
     manufacturer = tables.Column(

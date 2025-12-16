@@ -1,5 +1,6 @@
 {% extends 'generic/object.html' %}
 {% load helpers %}
+{% load i18n %}
 
 {% block title %}License Assignment ID {{ object.pk }}{% endblock %}
 
@@ -25,15 +26,15 @@
         </tr>
         <tr>
           <th scope="row">Product Code</th>
-          <td>{{ object.license.license_type.product_code|linkify|placeholder }}</td>
+          <td class="font-monospace">{{ object.license.license_type.product_code|linkify|placeholder }}</td>
         </tr>
         <tr>
           <th scope="row">License Manufacturer</th>
           <td>{{ object.license.license_type.manufacturer|linkify|placeholder }}</td>
         </tr>
         <tr>
-          <th scope="row">License Key</th>
-          <td class="font-monospace">{{ object.license|linkify }}</td>
+          <th>License Key</th>
+          <td class="font-monospace">{{ object.license }}</td>
         </tr>
         <tr>
           <th scope="row">Serial Number</th>
@@ -44,16 +45,57 @@
           <td>{{ object.license.license_type.get_volume_type_display }}</td>
         </tr>
         <tr>
-          <th scope="row">Parent License</th>
-          <td>{{ object.license.parent_license|linkify|default:"None" }}</td>
+          <th scope="row">Volume Limit</th>
+          <td>
+            {% if object.license.volume_type == 'UNLIMITED' %}
+              Unlimited
+            {% else %}
+              {{ object.license.volume_limit }}
+            {% endif %}
+          </td>
         </tr>
+        <tr>
+          <th scope="row">Current Usage</th>
+          <td>{{ object.license.usage_display }}</td>
+        </tr>
+        {% if object.license.parent_license %}
+        <tr>
+          <th scope="row">Parent License</th>
+          <td>{{ object.license.parent_license|linkify }}</td>
+        </tr>
+        {% endif %}
+
+        {% if object.license.purchase_date %}
         <tr>
           <th scope="row">Purchase Date</th>
-          <td>{{ object.license.purchase_date|date:"Y-m-d"|placeholder }}</td>
+          <td>{{ object.license.purchase_date|date:"Y-m-d" }}</td>
         </tr>
+        {% endif %}
+
+        {% if object.license.expiry_date %}
         <tr>
           <th scope="row">Expiry Date</th>
-          <td>{{ object.license.expiry_date|date:"Y-m-d"|placeholder }}</td>
+          <td>{{ object.license.expiry_date|date:"Y-m-d" }}</td>
+        </tr>
+        {% endif %}
+
+        <tr>
+          <th scope="row">Expiry Status</th>
+          <td>
+            {% include "netbox_license/inc/license_progressbar.html" with record=object.license %}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans "Support Status" %}</th>
+          <td>{% badge object.license.get_support_status_display bg_color=object.license.get_support_status_color %}</td>
+        </tr>
+        <tr>
+          <th scope="row">Description</th>
+          <td>{{ object.license.description|placeholder }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans "Status" %}</th>
+          <td>{% badge object.license.get_status_display bg_color=object.license.get_status_color %}</td>
         </tr>
       </table>
     </div>

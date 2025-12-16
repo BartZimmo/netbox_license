@@ -20,6 +20,5 @@ class NetboxLicenseConfig(PluginConfig):
         super().ready()
         from . import events
         from . import signals
-        from . import jobs
 
 config = NetboxLicenseConfig

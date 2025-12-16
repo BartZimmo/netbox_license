@@ -14,7 +14,6 @@ from ..choices import (
     LicenseModelChoices,
     VolumeRelationChoices,
     LicenseStatusChoices,
-    LicenseAssignmentStatusChoices,
     AssignmentKindChoices,
 )
 # ---------- LicenseType ----------
@@ -48,7 +47,7 @@ class LicenseTypeImportForm(NetBoxModelImportForm):
     purchase_model = CSVChoiceField(
         choices=PurchaseModelChoices,
         required=True,
-        help_text='Peripheral or subscription.'
+        help_text='Perpetual or subscription.'
     )
     base_license = CSVModelChoiceField(
         queryset=LicenseType.objects.filter(license_model=LicenseModelChoices.BASE),
@@ -209,6 +208,11 @@ class LicenseImportForm(NetBoxModelImportForm):
         to_field_name='license_key',
         help_text='Parent license key if applicable'
     )
+    status = CSVChoiceField(
+        choices=LicenseStatusChoices,
+        required=False,
+        help_text='Status of the license type: Active(Default) or Inactive.'
+    )
     comments = forms.CharField(
         required=False,
         help_text='Optional comment on this license.'
@@ -218,7 +222,7 @@ class LicenseImportForm(NetBoxModelImportForm):
         model = License
         fields = [
             "license_type", "license_key", "serial_number", "description",
-            "purchase_date", "expiry_date", "volume_limit", "parent_license", "comments",
+            "purchase_date", "expiry_date", "volume_limit", "parent_license", "status", "comments",
         ]
 
 

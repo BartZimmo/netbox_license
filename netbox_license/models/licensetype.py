@@ -23,11 +23,11 @@ class LicenseType(NetBoxModel):
     product_code = models.CharField(max_length=255, blank=True, null=True)
 
     ean_code = models.CharField(
-    "EAN code",
-    max_length=255,
-    blank=True,
-    null=True
-)
+        "EAN code",
+        max_length=255,
+        blank=True,
+        null=True
+    )
 
     volume_type = models.CharField(
         max_length=20, 

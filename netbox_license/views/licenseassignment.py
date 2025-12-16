@@ -1,12 +1,12 @@
 from netbox.views import generic
 from utilities.views import register_model_view
 from netbox_license.models.licenseassignment import LicenseAssignment
-from .. import tables
 from netbox_license.filtersets.licenseassignments import LicenseAssignmentFilterSet
 from ..forms.models import LicenseAssignmentForm
 from ..forms.bulk_edit import LicenseAssignmentBulkEditForm
 from ..forms.bulk_import import LicenseAssignmentImportForm
 from ..forms.filtersets import LicenseAssignmentFilterForm
+from netbox_license.tables.licenseassignment import LicenseAssignmentTable
 
 
 __all__ = (
@@ -32,7 +32,7 @@ class LicenseAssignmentView(generic.ObjectView):
 class LicenseAssignmentListView(generic.ObjectListView):
     """View to list all assigned licenses with advanced filters."""
     queryset = LicenseAssignment.objects.prefetch_related("license", "device")
-    table = tables.LicenseAssignmentTable
+    table = LicenseAssignmentTable
     filterset = LicenseAssignmentFilterSet
     filterset_form = LicenseAssignmentFilterForm 
 
@@ -65,7 +65,7 @@ class LicenseAssignmentBulkEditView(generic.BulkEditView):
     """View for bulk editing license assignments."""
     queryset = LicenseAssignment.objects.all()
     filterset = LicenseAssignmentFilterSet
-    table = tables.LicenseAssignmentTable
+    table = LicenseAssignmentTable
     form = LicenseAssignmentBulkEditForm
     default_return_url = 'plugins:netbox_license:licenseassignment_list'
 
@@ -73,5 +73,5 @@ class LicenseAssignmentBulkEditView(generic.BulkEditView):
 class LicenseAssignmentBulkDeleteView(generic.BulkDeleteView):
     """View for bulk deleting license assignments."""
     queryset = LicenseAssignment.objects.all()
-    table = tables.LicenseAssignmentTable
+    table = LicenseAssignmentTable
     default_return_url = 'plugins:netbox_license:licenseassignment_list'

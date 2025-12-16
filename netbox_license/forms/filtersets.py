@@ -1,7 +1,9 @@
 from django import forms
 from netbox.forms import NetBoxModelFilterSetForm
-from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, CommentField
+from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, CommentField, DynamicChoiceField
+from netbox.api.fields import ChoiceField
 from utilities.forms.rendering import FieldSet
+from utilities.forms.widgets import DatePicker
 from dcim.models import Manufacturer, Device, DeviceType
 from virtualization.models import VirtualMachine, Cluster
 from netbox_license.models.license import License
@@ -15,8 +17,9 @@ from ..choices import (
     LicenseModelChoices,
     VolumeRelationChoices,
     LicenseStatusChoices,
-    LicenseAssignmentStatusChoices,
+    LicenseSupportStatusChoices,
     AssignmentKindChoices,
+    LicenseAssignmentChoices,
 )
 
 # ---------- LicenseType ----------
@@ -92,11 +95,11 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
     )
     fieldsets = (
         FieldSet('q', name='Search'),
-        FieldSet('license_type__manufacturer_id', 'license_key', 'serial_number', 'name', name='License Info'),
+        FieldSet('license_type__manufacturer_id', 'license_key', 'serial_number', 'name', 'status', 'support_status', name='License Info'),
         FieldSet('license_model', 'volume_type', 'license_type_id', name='License Type Info'),
         FieldSet('is_parent_license', 'is_child_license', 'parent_license', 'child_license', 'parent_license_type', name='License Relationship'),
         FieldSet('assignments__device_id', 'assignments__virtual_machine_id', 'assignments__virtual_machine__cluster_id', 'is_assigned', name='Assignment Info'),
-        FieldSet('purchase_date', 'expiry_date', name='Dates'),
+        FieldSet('purchase_date__lte', 'purchase_date__gte', 'expiry_date__lte', 'expiry_date__gte',  name='Dates'),
     )
 
     q = forms.CharField(required=False, label='Search')
@@ -110,6 +113,16 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
     license_key = forms.CharField(required=False, label="License Key")
     serial_number = forms.CharField(required=False, label="Serial Number")
     name = forms.CharField(required=False, label="Name")
+    status = forms.ChoiceField(
+        required=False,
+        label="Status",
+        choices=[('', '---------')] + list(LicenseStatusChoices)
+    )
+    support_status = forms.MultipleChoiceField(
+        required=False,
+        label="Support Status",
+        choices=[('', '---------')] + list(LicenseSupportStatusChoices)
+    )
 
     license_model = forms.MultipleChoiceField(
         required=False,
@@ -162,10 +175,11 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
         widget=forms.Select(choices=[('', '---------'), (True, 'Yes'), (False, 'No')])
     )
 
-    is_assigned = forms.NullBooleanField(
+    is_assigned = forms.MultipleChoiceField(
         required=False,
         label="Is Assigned",
-        widget=forms.Select(choices=[('', '---------'), (True, 'Yes'), (False, 'No')])
+        choices=LicenseAssignmentChoices,
+        widget=forms.SelectMultiple()
     )
 
     assignments__device_id = DynamicModelMultipleChoiceField(
@@ -189,25 +203,25 @@ class LicenseFilterForm(NetBoxModelFilterSetForm):
     purchase_date__gte = forms.DateField(
         required=False,
         label="Purchase Date (After)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     purchase_date__lte = forms.DateField(
         required=False,
         label="Purchase Date (Before)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     expiry_date__gte = forms.DateField(
         required=False,
         label="Expiry Date (After)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     expiry_date__lte = forms.DateField(
         required=False,
         label="Expiry Date (Before)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     base_license_type_id = forms.IntegerField(
@@ -290,13 +304,13 @@ class LicenseAssignmentFilterForm(NetBoxModelFilterSetForm):
     assigned_on__gte = forms.DateField(
         required=False,
         label="Assigned Date (After)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     assigned_on__lte = forms.DateField(
         required=False,
         label="Assigned Date (Before)",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=DatePicker()
     )
 
     volume = forms.IntegerField(

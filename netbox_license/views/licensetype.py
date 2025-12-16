@@ -1,13 +1,13 @@
 from netbox.views import generic
 from utilities.views import register_model_view
 from netbox_license.models.licensetype import LicenseType
-from .. import tables
 from netbox_license.filtersets.licensetypes import LicenseTypeFilterSet
 from ..forms.filtersets import LicenseTypeFilterForm
 from ..forms.models import LicenseTypeForm
 from ..forms.bulk_edit import LicenseTypeBulkEditForm
 from ..forms.bulk_import import LicenseTypeImportForm
 from django.db.models import Count
+from netbox_license.tables.licensetype import LicenseTypeTable
 
 __all__ = (
     'LicenseTypeView',
@@ -29,7 +29,7 @@ class LicenseTypeView(generic.ObjectView):
 @register_model_view(LicenseType, 'list', path='', detail=False)
 class LicenseTypeListView(generic.ObjectListView):
     queryset = LicenseType.objects.annotate(license_count=Count('licenses', distinct=True))
-    table = tables.LicenseTypeTable
+    table = LicenseTypeTable
     filterset = LicenseTypeFilterSet
     filterset_form = LicenseTypeFilterForm
 
@@ -59,7 +59,7 @@ class LicenseTypeBulkImportView(generic.BulkImportView):
 class LicenseTypeBulkEditView(generic.BulkEditView):
     queryset = LicenseType.objects.all()
     filterset = LicenseTypeFilterSet
-    table = tables.LicenseTypeTable
+    table = LicenseTypeTable
     form = LicenseTypeBulkEditForm
     default_return_url = 'plugins:netbox_license:licensetype_list'
 
@@ -67,5 +67,5 @@ class LicenseTypeBulkEditView(generic.BulkEditView):
 @register_model_view(LicenseType, 'bulk_delete', path='delete', detail=False)
 class LicenseTypeBulkDeleteView(generic.BulkDeleteView):
     queryset = LicenseType.objects.all()
-    table = tables.LicenseTypeTable
+    table = LicenseTypeTable
     default_return_url = 'plugins:netbox_license:licensetype_list'

@@ -26,9 +26,9 @@ def track_status_change(sender, instance, **kwargs):
     except License.DoesNotExist:
         return
 
-    # Check if status changed
-    if old_instance.status != instance.status:
-        logger.info(f"Status changed: {old_instance.status} -> {instance.status}")
+    # Check if support_status changed
+    if old_instance.support_status != instance.support_status:
+        logger.info(f"Support status changed: {old_instance.support_status} -> {instance.support_status}")
 
         request = current_request.get()
         if request is None:
@@ -37,8 +37,8 @@ def track_status_change(sender, instance, **kwargs):
 
         queue = events_queue.get()
         try:
-            enqueue_event(queue, instance, request, 'netbox_license.expirystatus')
-            logger.info("Event enqueued: netbox_license.expirystatus")
+            enqueue_event(queue, instance, request, 'netbox_license.supportstatus')
+            logger.info("Event enqueued: netbox_license.supportstatus")
         except Exception as e:
             logger.error(f"Failed to enqueue event: {e}")
 

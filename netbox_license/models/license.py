@@ -48,6 +48,10 @@ class License(NetBoxModel):
 
     tags = TaggableManager(related_name="lm_license_tags")
 
+    clone_fields = [
+        'license_type', 'volume_limit', 'purchase_date', 'expiry_date', 'parent_license', 'status', 'comments',
+    ]
+
     def clean(self):
         if self.license_type_id:
             try:
@@ -83,10 +87,14 @@ class License(NetBoxModel):
             
         self.support_status = self.compute_support_status()
 
+
+
+    ### Calculate current usage based on assignments for the template page.
     def current_usage(self):
         assigned = self.assignments.aggregate(models.Sum('volume'))['volume__sum'] or 0
         return assigned
 
+    ### Display usage as current/limit for the template page.  ??
     def usage_display(self):
         vt = self.license_type.volume_type if self.license_type else ""
         if vt == "unlimited":
@@ -94,9 +102,12 @@ class License(NetBoxModel):
         return f"{self.current_usage()}/{self.volume_limit}"
 
 
+
+    ### Get color for status options defined in choices.py
     def get_status_color(self):
         return LicenseStatusChoices.colors.get(self.status)
 
+    ### Get color for support status options defined in choices.py
     def get_support_status_color(self):
         return LicenseSupportStatusChoices.colors.get(self.support_status)
     

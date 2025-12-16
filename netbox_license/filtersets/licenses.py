@@ -1,9 +1,10 @@
 import django_filters
 from django.utils.translation import gettext as _
 from django.db.models import Q
+from django.db import models
 from netbox_license.models.license import License
 from netbox_license.models.licensetype import LicenseType
-from netbox_license.choices import VolumeTypeChoices, LicenseModelChoices, LicenseSupportStatusChoices, LicenseStatusChoices
+from netbox_license.choices import VolumeTypeChoices, LicenseModelChoices, LicenseSupportStatusChoices, LicenseStatusChoices, LicenseAssignmentChoices
 from netbox.filtersets import NetBoxModelFilterSet
 from dcim.models import Manufacturer, Device
 from virtualization.models import VirtualMachine, Cluster
@@ -88,11 +89,12 @@ class LicenseFilterSet(NetBoxModelFilterSet):
         label='Is Child License'
     )
 
-    is_assigned = django_filters.BooleanFilter(
+    is_assigned = django_filters.MultipleChoiceFilter(
         method='filter_is_assigned',
         label='Is Assigned',
+        choices=LicenseAssignmentChoices,
     )
-    
+
     assignments__device_id = django_filters.ModelMultipleChoiceFilter(
         field_name='assignments__device',
         queryset=Device.objects.all(),
@@ -130,12 +132,19 @@ class LicenseFilterSet(NetBoxModelFilterSet):
             return queryset.filter(sub_licenses__isnull=False).distinct()
         return queryset.filter(sub_licenses__isnull=True)
     
+    ### Filter licenses based on assignments: fully assigned, partly assigned, or not assigned.
     def filter_is_assigned(self, queryset, name, value):
-        if value is True:
-            return queryset.filter(assignments__isnull=False).distinct()
-        if value is False:
-            return queryset.filter(assignments__isnull=True)
-        return queryset
+        queryset = queryset.annotate(
+            assigned_volume=models.Sum('assignments__volume')
+        )
+        q = models.Q()
+        if 'fully' in value:
+            q |= models.Q(assigned_volume=models.F('volume_limit'), assigned_volume__isnull=False)
+        if 'partly' in value:
+            q |= models.Q(assigned_volume__gt=0, assigned_volume__lt=models.F('volume_limit'))
+        if 'not' in value:
+            q |= models.Q(assigned_volume__isnull=True) | models.Q(assigned_volume=0)
+        return queryset.filter(q).distinct().order_by('id')
 
 
     def filter_by_base_license_type(self, queryset, name, value):

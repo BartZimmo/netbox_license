@@ -97,3 +97,15 @@ class AssignmentKindChoices(ChoiceSet):
         (DEVICE, 'Device'),
         (VM, 'Virtual Machine'),
     ]
+
+
+class LicenseAssignmentChoices(ChoiceSet):
+    FULLY = 'fully'
+    PARTLY = 'partly'
+    NOT = 'not'
+
+    CHOICES = [
+        (FULLY, 'Fully'),
+        (PARTLY, 'Partly'),
+        (NOT, 'Not'),
+    ]

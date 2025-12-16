@@ -22,7 +22,7 @@ class LicenseTypeFilterSet(NetBoxModelFilterSet):
         field_name='manufacturer__slug',
         queryset=Manufacturer.objects.all(),
         to_field_name='slug',
-        label="Manufacturer name (slug)"
+        label="Manufacturer (slug)"
     )
 
     license_model = django_filters.MultipleChoiceFilter(
@@ -46,7 +46,7 @@ class LicenseTypeFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = LicenseType
         fields = [
-            "name", "slug", "manufacturer", "product_code", "ean_code",
+            "name", "slug", "product_code", "ean_code",
             "volume_type", "license_model", "purchase_model", "base_license"
         ]
 

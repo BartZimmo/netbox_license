@@ -142,6 +142,7 @@ class LicenseFilterSet(NetBoxModelFilterSet):
             q |= models.Q(assigned_volume=models.F('volume_limit'), assigned_volume__isnull=False)
         if 'partly' in value:
             q |= models.Q(assigned_volume__gt=0, assigned_volume__lt=models.F('volume_limit'))
+            q |= models.Q(assigned_volume__gt=0, volume_limit__isnull=True)
         if 'not' in value:
             q |= models.Q(assigned_volume__isnull=True) | models.Q(assigned_volume=0)
         return queryset.filter(q).distinct().order_by('id')

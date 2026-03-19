@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: netbox_license
-Version: 2.4.1
+Version: 2.5.2
 Summary: Inventory License management in NetBox
 Author-email: Bart Van der Biest <bart@zimmo.be>
 Keywords: netbox,netbox-plugin,License

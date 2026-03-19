@@ -2,6 +2,7 @@ from typing import Annotated, List
 
 import strawberry
 import strawberry_django
+from strawberry.types import Info
 
 from netbox.graphql.types import NetBoxObjectType
 from dcim.graphql.types import ManufacturerType, DeviceType
@@ -51,7 +52,7 @@ class LicenseAssignmentType(NetBoxObjectType):
 @strawberry.type
 class LicenseTypeQuery:
     @strawberry.field
-    def license_type(self, id: int) -> LicenseTypeType:
+    def license_type(self, info: Info, id: int) -> LicenseTypeType:
         return None
     license_type_list: List[LicenseTypeType] = strawberry_django.field()
 
@@ -60,7 +61,7 @@ class LicenseTypeQuery:
 @strawberry.type
 class LicenseQuery:
     @strawberry.field
-    def license(self, id: int) -> LicenseType:
+    def license(self, info: Info, id: int) -> LicenseType:
         return None
     license_list: List[LicenseType] = strawberry_django.field()
 
@@ -69,7 +70,7 @@ class LicenseQuery:
 @strawberry.type
 class LicenseAssignmentQuery:
     @strawberry.field
-    def license_assignment(self, id: int) -> LicenseAssignmentType:
+    def license_assignment(self, info: Info, id: int) -> LicenseAssignmentType:
         return None
     license_assignment_list: List[LicenseAssignmentType] = strawberry_django.field()
 

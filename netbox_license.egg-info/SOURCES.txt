@@ -22,7 +22,6 @@ netbox_license/api/urls.py
 netbox_license/api/views.py
 netbox_license/api/serializers/__init__.py
 netbox_license/api/serializers/licenses.py
-netbox_license/extras/CheckLicenseSupportStatus.py
 netbox_license/filtersets/__init__.py
 netbox_license/filtersets/licenseassignments.py
 netbox_license/filtersets/licenses.py

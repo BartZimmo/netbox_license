@@ -111,7 +111,7 @@ class LicenseTable(NetBoxTable):
             max_str = 1
 
         url = reverse('plugins:netbox_license:licenseassignment_list') + f'?license={record.pk}'
-        return format_html(f'<a href="{url}">{assigned}/{max_str}</a>')
+        return format_html('<a href="{}">{}/{}</a>', url, assigned, max_str)
 
     
     class Meta(NetBoxTable.Meta):

@@ -102,11 +102,11 @@ class LicenseAssignment(NetBoxModel):
         verbose_name_plural = "License Assignments"
         constraints = [
             models.CheckConstraint(
-                check=models.Q(device__isnull=False) | models.Q(virtual_machine__isnull=False),
+                condition=models.Q(device__isnull=False) | models.Q(virtual_machine__isnull=False),
                 name='licenseassign_either_device_or_vm_required'
             ),
             models.CheckConstraint(
-                check=~(models.Q(device__isnull=False) & models.Q(virtual_machine__isnull=False)),
+                condition=~(models.Q(device__isnull=False) & models.Q(virtual_machine__isnull=False)),
                 name='licenseassign_only_one_target_allowed'
             )
         ]

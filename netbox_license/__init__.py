@@ -11,7 +11,7 @@ class NetboxLicenseConfig(PluginConfig):
     base_url = 'license'
     author = 'Bart Van der Biest'
     author_email = 'bart@zimmo.be'
-    min_version = '4.5.5'
+    min_version = '4.6.0'
     default_settings = {
         'top_level_menu': True,
     }

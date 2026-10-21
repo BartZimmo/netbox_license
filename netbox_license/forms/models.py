@@ -173,14 +173,14 @@ class LicenseForm(NetBoxModelForm):
         label="Status",
     )
 
-    comment = CommentField()
+    comments = CommentField()
 
     class Meta:
         model = License
         fields = [
             "license_type", "license_key", "serial_number",
             "description", "volume_limit", "parent_license",
-            "purchase_date", "expiry_date", "status", "comment"
+            "purchase_date", "expiry_date", "status", "comments"
         ]
 
     def __init__(self, *args, **kwargs):
